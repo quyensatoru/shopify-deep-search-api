@@ -1,4 +1,5 @@
-import {Controller, Post} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { BulkQueryFinishDto } from "./dto/bulk-query-finish.dto";
 
 @Controller('webhook')
 export class WebhookController {
@@ -8,7 +9,14 @@ export class WebhookController {
     }
 
     @Post('app/uninstalled')
-    async appUninstalled() {
+    async appUninstalled(@Body() body: any) {
+        console.log(body);
+        return true
+    }
+
+    @Post('bulk_operations/finish')
+    async bulkOperationsFinish(@Body() body: BulkQueryFinishDto) {
+        console.log(body);
         return true
     }
 }

@@ -2,18 +2,22 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ShopModule } from './shop/shop.module';
-import { DatabaseModule } from './core/infrastructure/database/database.module';
-import { ConfigModule } from "@nestjs/config";
 import { WebhookModule } from './webhook/webhook.module';
-import { RabbitMqModule } from './core/infrastructure/rabbit-mq/rabbit-mq.module';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from './config/config.module';
+import { QueueModule } from './queue/queue.module';
+import { UtilModule } from './util/util.module';
+import { ShopifyModule } from './shopify/shopify.module';
 
 @Module({
   imports: [
-      ConfigModule.forRoot({ isGlobal: true }),
+      ConfigModule,
       ShopModule,
       DatabaseModule,
       WebhookModule,
-      RabbitMqModule,
+      QueueModule,
+      UtilModule,
+      ShopifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

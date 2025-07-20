@@ -11,6 +11,9 @@ export class Shop {
 
     @Prop({ required: true, type: Boolean })
     status: boolean;
+
+    @Prop({ type: String })
+    productBulkOperation: string;
 }
 
 export type ShopDocument = HydratedDocument<Shop>;
