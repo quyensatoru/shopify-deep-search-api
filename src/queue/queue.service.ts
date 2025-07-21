@@ -22,8 +22,9 @@ export class QueueService implements OnModuleInit {
         this.channel.sendToQueue(queueName, Buffer.from(JSON.stringify(payload)));
     }
 
-     async consume<T>(queueName: string, handler: (channel: amqp.Channel, data: T) => void) {
+     async consume<T>(queueName: string, prefetch = 1, handler: (channel: amqp.Channel, data: T) => void) {
         await this.channel.assertQueue(queueName, { durable: true });
+        await this.channel.prefetch(prefetch);
         await this.channel.consume(queueName, (msg) => {
             if (msg !== null) {
                 const data: T = JSON.parse(msg.content.toString());

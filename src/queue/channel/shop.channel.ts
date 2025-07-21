@@ -2,8 +2,6 @@ import {Injectable, Logger, OnApplicationBootstrap, OnModuleInit} from "@nestjs/
 import { QueueService } from "../queue.service";
 import { ShopDocument } from "../../shop/schemas/shop.schema";
 import { Channel } from "amqplib"
-import { ConfigService } from "@nestjs/config";
-import { AllConfig } from "../../config/config.type";
 import { ProductService } from "../../shopify/product/product.service";
 
 @Injectable()
@@ -12,21 +10,33 @@ export class ShopChannelService implements OnApplicationBootstrap {
     private readonly logger = new Logger(ShopChannelService.name);
 
     constructor(
-        private configService: ConfigService<AllConfig>,
         private readonly queueService: QueueService,
+        private readonly productService: ProductService,
     ) {
         this.queueName = 'queue_shop';
     }
 
     onApplicationBootstrap(): void {
-        this.queueService.consume<ShopDocument>(this.queueName, this.productBulkOperationQuery)
+        this.queueService.consume<ShopDocument>(this.queueName, 5, this.productBulkOperationQuery)
     }
 
-    async productBulkOperationQuery(channel: Channel, data: ShopDocument) {
+    private async productBulkOperationQuery(channel: Channel, shop: ShopDocument) {
         try {
+            const retrieveBulkData = await this.productService.bulkOperationRetrieveQuery(
+                shop.domain,
+                shop.accessToken,
+                shop.productBulkOperation
+            );
 
+            if(retrieveBulkData?.url) {
+
+            }
         } catch (e) {
             this.logger.error(e);
         }
+    }
+
+    async sendToQueue(payload: ShopDocument) {
+        await this.queueService.sendToQueue(this.queueName, payload);
     }
 }

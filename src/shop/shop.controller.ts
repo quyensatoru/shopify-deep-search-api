@@ -29,7 +29,7 @@ export class ShopController {
         })
 
         if(isUpdated) {
-            const res = await this.productService.bulkOperationProduct(shop.domain, shop.accessToken);
+            const res = await this.productService.bulkOperationRunQuery(shop.domain, shop.accessToken);
             if(res?.bulkOperation.id) {
                 shop.set('productBulkOperation', res?.bulkOperation.id).save();
             }

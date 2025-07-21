@@ -1,5 +1,4 @@
-import { IsString } from "class-validator";
-import { Optional } from "@nestjs/common";
+import { IsString, IsOptional } from "class-validator";
 
 export class BulkQueryFinishDto {
     @IsString()
@@ -12,7 +11,7 @@ export class BulkQueryFinishDto {
     created_at: string;
 
     @IsString()
-    @Optional()
+    @IsOptional()
     error_code: any;
 
     @IsString()

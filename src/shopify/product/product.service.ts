@@ -1,6 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {shopifyGraphqlFetch} from "../shopify.helper";
-import {BulkOperationRunQuery} from "./product.type";
+import {BulkOperationRetrieveQuery, BulkOperationRunQuery} from "./product.type";
 import {GraphQL} from "@bss-sbc/shopify-api-fetcher";
 import {ConfigService} from "@nestjs/config";
 import {AllConfig} from "../../config/config.type";
@@ -14,7 +14,7 @@ export class ProductService {
         })
     }
 
-    async bulkOperationProduct(domain: string, accessToken: string) {
+    async bulkOperationRunQuery(domain: string, accessToken: string) {
         try {
             const query = `
             mutation {
@@ -112,6 +112,34 @@ export class ProductService {
         } catch (e) {
             this.logger.error(e);
             throw e
+        }
+    }
+    async bulkOperationRetrieveQuery(domain: string, accessToken: string, id: string) {
+        try {
+            const query = `
+            query BulkOperationQuery($id: ID!) {
+                node(id: $id) {
+                    ... on BulkOperation {
+                        url
+                        type
+                        fileSize
+                        objectCount
+                        rootObjectCount
+                        partialDataUrl
+                    }
+                }
+            }
+            `
+            const res = await shopifyGraphqlFetch<BulkOperationRetrieveQuery>(domain, accessToken, {
+                query: query,
+                variables: {
+                    id
+                }
+            })
+            return res.data?.node;
+        } catch (e) {
+            this.logger.error(e);
+            throw e;
         }
     }
 }
