@@ -6,8 +6,8 @@ import {ConfigService} from "@nestjs/config";
 import {AllConfig} from "../../config/config.type";
 
 @Injectable()
-export class ProductService {
-    private readonly logger= new Logger(ProductService.name);
+export class ShopifyProductService {
+    private readonly logger= new Logger(ShopifyProductService.name);
     constructor(private readonly configService: ConfigService<AllConfig>) {
         GraphQL.setConfig({
             version: this.configService.get('shopify.apiVersion', { infer: true })
@@ -49,7 +49,7 @@ export class ProductService {
                                             currencyCode
                                         }
                                     }
-                                    variants {
+                                    variants (first: 100){
                                         edges {
                                             node {
                                                 id
@@ -75,7 +75,7 @@ export class ProductService {
                                         level
                                         isArchived
                                     }
-                                    collections {
+                                    collections (first: 100){
                                         edges {
                                             node {
                                                 description

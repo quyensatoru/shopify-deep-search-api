@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import {ShopChannelService} from "./channel/shop.channel";
-import {ShopifyModule} from "../shopify/shopify.module";
+import {ShopifyProductModule} from "../shopify/product/product.module";
 
 @Module({
-  imports: [ShopifyModule],
+  imports: [ShopifyProductModule],
   providers: [ShopChannelService, QueueService],
-  exports: [ShopChannelService]
+  exports: [ShopChannelService],
 })
 export class QueueModule {}

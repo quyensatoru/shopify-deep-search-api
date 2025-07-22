@@ -15,7 +15,7 @@ export class ShopService {
         return this.shopModel.create(shop);
     }
 
-    update(filter: FilterQuery<Shop>, update: Partial<Shop>) {
+    upsert(filter: FilterQuery<Shop>, update: Partial<Shop>) {
         return this.shopModel.findOneAndUpdate(filter, update, { upsert: true, new: true });
     }
 }

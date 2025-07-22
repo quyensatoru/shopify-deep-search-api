@@ -3,13 +3,14 @@ import { ShopService } from './shop.service';
 import { MongooseModule } from "@nestjs/mongoose";
 import { Shop, ShopSchema } from "./schemas/shop.schema";
 import { ShopController } from './shop.controller';
-import {ProductService} from "../shopify/product/product.service";
-import {ProductModule} from "../shopify/product/product.module";
+import { ShopifyProductModule } from "../shopify/product/product.module";
+import {ShopifyShopModule} from "../shopify/shop/shop.module";
 
 @Module({
   imports: [
       MongooseModule.forFeature([{name: Shop.name, schema: ShopSchema}]),
-      ProductModule,
+      ShopifyProductModule,
+      ShopifyShopModule,
   ],
   providers: [ShopService],
   controllers: [ShopController],

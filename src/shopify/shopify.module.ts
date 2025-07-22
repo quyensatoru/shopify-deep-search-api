@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ProductModule } from './product/product.module';
-import {ProductService} from "./product/product.service";
+import { ShopifyProductModule } from './product/product.module';
+import { ShopifyShopModule } from './shop/shop.module';
 
 @Module({
-  imports: [ProductModule],
-  providers: [ProductService],
-  exports: [ProductModule]
+  imports: [ShopifyProductModule, ShopifyShopModule],
 })
 export class ShopifyModule {}

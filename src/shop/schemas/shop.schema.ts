@@ -12,6 +12,21 @@ export class Shop {
     @Prop({ required: true, type: Boolean })
     status: boolean;
 
+    @Prop({ required: true, type: String })
+    shopUrl: string;
+
+    @Prop({ required: true, type: String })
+    currencyCode: string;
+
+    @Prop({ required: true, type: String })
+    currencyFormat: string;
+
+    @Prop({ required: true, type: String })
+    email: string;
+
+    @Prop({ required: true, type: String })
+    shopifyShopId: string;
+
     @Prop({ type: String })
     productBulkOperation: string;
 }
