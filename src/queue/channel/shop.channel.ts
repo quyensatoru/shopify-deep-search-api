@@ -6,6 +6,7 @@ import { ShopifyProductService } from "../../shopify/product/product.service";
 import axios from "axios";
 import * as readline from "node:readline";
 import {ProductResourceNode} from "../../shopify/product/product.type";
+import { SearchService } from "../../search/search.service";
 
 @Injectable()
 export class ShopChannelService implements OnApplicationBootstrap {
@@ -15,6 +16,7 @@ export class ShopChannelService implements OnApplicationBootstrap {
     constructor(
         private readonly queueService: QueueService,
         private readonly shopifyProductService: ShopifyProductService,
+        private readonly searchService: SearchService,
     ) {
         this.queueName = 'queue_shop';
     }
@@ -44,6 +46,7 @@ export class ShopChannelService implements OnApplicationBootstrap {
                 for await (const line of rl) {
                     if (!line.trim()) continue;
                     const product = JSON.parse(line) as ProductResourceNode;
+                    await this.searchService.saveAndIndexProduct(product);
                 }
             }
         } catch (e) {

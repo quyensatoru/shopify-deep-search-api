@@ -8,6 +8,7 @@ import { ConfigModule } from './config/config.module';
 import { QueueModule } from './queue/queue.module';
 import { UtilModule } from './util/util.module';
 import { ShopifyModule } from './shopify/shopify.module';
+import { TemplateModule } from './template/template.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ShopifyModule } from './shopify/shopify.module';
       QueueModule,
       UtilModule,
       ShopifyModule,
+      TemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
