@@ -19,7 +19,10 @@ export class SearchService {
       { upsert: true, new: true }
     );
     // Index to Elasticsearch
-    await this.elasticsearchService.indexProduct(doc);
+    const obj = doc.toObject();
+    obj.id = obj._id;
+    delete obj._id;
+    await this.elasticsearchService.indexProduct(obj);
     return doc;
   }
 } 

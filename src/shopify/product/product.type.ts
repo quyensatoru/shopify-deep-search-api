@@ -19,6 +19,22 @@ export type BulkOperationRetrieveQuery = {
     }
 }
 
+export type VariantResourceNode = {
+    id: string,
+    price: string,
+    displayName: string,
+    barcode: string,
+    __parentId?: string,
+}
+
+export type CollectionResourceNode = {
+    id: string,
+    description: string,
+    handle: string,
+    title: string,
+    __parentId?: string,
+}
+
 export type ProductResourceNode = {
     id: string,
     title: string,
@@ -45,16 +61,7 @@ export type ProductResourceNode = {
             currencyCode: string
         }
     }
-    variants: {
-        edges: {
-            node: {
-                id: string,
-                price: string,
-                displayName: string,
-                barcode: string
-            }
-        }[]
-    },
+    variants: VariantResourceNode[],
     options: {
         id: string,
         name: string,
@@ -71,13 +78,5 @@ export type ProductResourceNode = {
         level: number,
         isArchived: boolean,
     },
-    collections: {
-        edges: {
-            node: {
-                description: string,
-                handle: string,
-                title: string,
-            }
-        }[]
-    }
+    collections: CollectionResourceNode[],
 }

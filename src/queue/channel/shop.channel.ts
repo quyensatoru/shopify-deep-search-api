@@ -5,7 +5,7 @@ import { Channel } from "amqplib"
 import { ShopifyProductService } from "../../shopify/product/product.service";
 import axios from "axios";
 import * as readline from "node:readline";
-import {ProductResourceNode} from "../../shopify/product/product.type";
+import {CollectionResourceNode, ProductResourceNode, VariantResourceNode} from "../../shopify/product/product.type";
 import { SearchService } from "../../search/search.service";
 
 @Injectable()
@@ -42,10 +42,38 @@ export class ShopChannelService implements OnApplicationBootstrap {
                     input: response.data,
                     crlfDelay: Infinity,
                 });
-
+                let product: ProductResourceNode | undefined;
+                let variants: VariantResourceNode[] = [];
+                let collections: CollectionResourceNode[] = [];
                 for await (const line of rl) {
                     if (!line.trim()) continue;
-                    const product = JSON.parse(line) as ProductResourceNode;
+                    const resource = JSON.parse(line) as ProductResourceNode | VariantResourceNode | CollectionResourceNode;
+                    if(!resource.hasOwnProperty("__parentId")) {
+                        if(product) {
+                            product.variants = variants;
+                            product.collections = collections;
+                            await this.searchService.saveAndIndexProduct(product);
+                            product = undefined;
+                            variants = [];
+                            collections = [];
+                        }
+                        product = resource as ProductResourceNode;
+                    } else {
+                        const relationResource =  resource as VariantResourceNode | CollectionResourceNode;
+                        if(relationResource.id.includes('gid:\/\/shopify\/ProductVariant\/')) {
+                            const variant = relationResource as VariantResourceNode;
+                            delete variant.__parentId;
+                            variants.push(variant);
+                        } else if(relationResource.id.includes('gid:\/\/shopify\/Collection\/')) {
+                            const collection = relationResource as CollectionResourceNode;
+                            delete collection.__parentId;
+                            collections.push(collection);
+                        }
+                    }
+                }
+                if(product) {
+                    product.variants = variants;
+                    product.collections = collections;
                     await this.searchService.saveAndIndexProduct(product);
                 }
             }
