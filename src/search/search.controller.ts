@@ -11,6 +11,9 @@ export class SearchController {
 
   @Get()
   async search(@Query('q') query: string) {
-    return this.elasticsearchService.searchProducts(query);
+    const start = Date.now();
+    const data =  await this.elasticsearchService.searchProducts(query);
+    console.log('time reponse', Date.now() - start, 'ms');
+    return data;
   }
 } 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {FilterQuery, Model} from 'mongoose';
 import { SearchProduct, SearchProductDocument } from './schemas/search-product.schema';
 import { ElasticsearchService } from './elasticsearch.service';
 
@@ -24,5 +24,9 @@ export class SearchService {
     delete obj._id;
     await this.elasticsearchService.indexProduct(obj);
     return doc;
+  }
+
+  find(filter: FilterQuery<SearchProduct>) {
+    return this.searchProductModel.find(filter)
   }
 } 

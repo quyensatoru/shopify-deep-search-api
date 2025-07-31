@@ -30,7 +30,7 @@ export class ElasticsearchService {
   }
 
   async searchProducts(query: string, from = 0, size = 100) {
-    const { hits, profile } = await this.client.search({
+    const { hits } = await this.client.search({
       index: this.index,
       from,
       size,
@@ -49,7 +49,6 @@ export class ElasticsearchService {
         'Content-Type': 'application/vnd.elasticsearch+json; compatible-with=8',
       }
     });
-    console.log("profile: ", profile)
     return hits.hits.map((hit: any) => hit._source);
   }
 } 
